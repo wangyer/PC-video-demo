@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>pc-video</title>
+<link rel="stylesheet" href="assets/css/short_detail.css">
+<style>
+    [v-cloak]{
+        display: none;
+    }
+</style>
+</head>
+<body>
+<div id="app" v-cloak>
+	<div class="wrapper-container wrapper-container-pfixed">
+		<div class="close-icon"></div>
+		<div class="inner-container">
+			<div class="video-left-arrow" v-if="dataIndex > 0" @click="triggerPrev"></div>
+			<div class="video-right-arrow" v-if="dataIndex < dataTotal - 1" @click="triggerNext"></div>
+			<div class="box-container clearfix">
+				<div class="author-info clearfix">
+					<a href="#" class="author-info-head fl">
+						<img :src="authAvatar">
+					</a>
+					<div class="author-info-detail fl">
+						<a href="#" class="author-info-name" v-html="authName"></a>
+						<div class="author-info-taketime" v-html="takeTime"></div>
+					</div>
+					<div class="author-info-follow author-info-follow-finish"></div>
+				</div>
+				<div class="video-container"  @mouseleave="hidePause">
+					<!-- 二维码扫描区域 -->
+					<div class="code-container">
+						<p>扫描二维码</p>
+						<div>
+							<img src=""/>
+						</div>
+						<p>二维码区域</p>
+					</div>
+					<div v-show="!isLoading">
+						<div class="back-mask"></div>
+						<div class="back-mask-foot"></div>
+						<!-- 标题信息 -->
+						<div class="title-container" v-if="isShowTitle && playData[currentPlayIndex].title">
+							<p v-html="playData[currentPlayIndex].title"></p>
+						</div>
+						<!-- 进度条区域 -->
+						<div class="progress-container">
+							<ul class="clearfix">
+								<li v-for="(i, index) in playDataLength" :class="{pointer: index != currentPlayIndex}" :style="{width: progressItemWidth + 'px'}" @click="index != currentPlayIndex && triggerProgress(index)">
+									<span :style="{width: recordProgress[index] + 'px'}"></span>
+								</li>
+							</ul>
+						</div>
+						<!-- 地点信息 -->
+						<div class="location-info"><span></span>英国阿尔勒</div>	
+						<!-- 评论区域 -->
+						<div class="comment-container" v-if="commentList.length">
+							<ul>
+								<li v-for="item in commentList"><span v-if="item && item.name" v-html="item.name"></span>：<span v-if="item && item.content" v-html="item.content"></span></li>
+							</ul>
+						</div>
+						<!-- 视频区域 -->
+						<div class="video-media" @mouseenter="showPause">
+							<video id="media"
+								:src="playData[currentPlayIndex].videoUrl"
+								:poster="playData[currentPlayIndex].imgUrl"
+								preload
+								playsinline
+								webkit-playsinline
+								x5-playsinline
+								background="transparent"
+								style="object-fit:cover;"
+								>
+								your browser does not support the video tag
+							</video>
+						</div>
+						<!-- 播放按钮 -->
+						<div class="video-play-icon" v-if="!isPlay" @click="playMedia"></div>
+						<!-- 暂停按钮 -->
+						<div class="video-pause-icon" @click="pauseMedia" v-if="isPlay && isShowPause"></div>
+						<!-- 重播按钮 -->
+						<div class="video-replay" v-if="dataIndex == dataListLen - 1 && currentPlayIndex == playDataLength - 1 && isEnd">
+							<div>
+								<img src="assets/images/video-replay-icon.png"/>
+								<div class="replay-btn" @click="replayMedia">重新播放</div>
+							</div>
+						</div>
+					</div>
+					<div v-show="isLoading">
+						<div class="loading-state">
+							<div>
+								<img src="assets/images/loading-new.gif">
+								<p>加载中，请稍后…</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="assets/js/jquery.min.v2.1.4.js"></script>
+<script src="assets/js/vue.min.v2.1.8.js"></script>
+<script src="assets/js/json.js"></script>
+<script src="assets/js/short_detail.js"></script>
+</body>
+</html>
